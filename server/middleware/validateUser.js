@@ -1,6 +1,6 @@
+/* eslint-disable consistent-return */
+import { check, validationResult } from 'express-validator/check';
 import db from '../models/db';
-
-const { check, validationResult } = require('express-validator/check');
 
 const validateSignup = [
   check('firstName')
@@ -14,9 +14,7 @@ const validateSignup = [
     .withMessage('firstname cannot contain whitespaces')
     .trim(),
 
-  check('lastName')
-    .matches(/^[a-zA-Z]+$/i)
-    .withMessage('lastname must contain only alphabets')
+  check('lastName').matches(/^[a-zA-Z]+$/i).withMessage('lastname must contain only alphabets')
     .isLength({ min: 3 })
     .withMessage('lastname must have atleast 3 characters')
     .isLength({ max: 50 })
@@ -28,12 +26,13 @@ const validateSignup = [
   check('otherName')
     .matches(/^[a-zA-Z]+$/i).withMessage('othername must contain only alphabets')
     .isLength({ min: 3 })
-    .withMessage('othername must have atleast 5 characters')
+    .withMessage('othername must have atleast 3 characters')
     .isLength({ max: 50 })
     .withMessage('othername cannot have more than 15 characters')
     .matches(/^\S{3,}$/)
     .withMessage('othername cannot contain whitespaces')
     .trim(),
+
   check('password').isLength({ min: 6 })
     .withMessage('password must have atleast 6 characters')
     .isLength({ max: 50 })
@@ -43,14 +42,17 @@ const validateSignup = [
     .trim(),
 
   check('phoneNumber')
-    .isLength({ min: 10 }).withMessage('please input a valid phone number')
-    .isLength({ max: 11 })
+    .isLength({ min: 10 })
+    .withMessage('please input a valid phone number')
+    .isLength({ max: 15 })
     .withMessage('please input a valid phone number')
     .isNumeric()
     .withMessage('phone number must contain only numbers')
     .trim(),
 
-  check('email').isEmail().withMessage('Please input a valid email address')
+  check('email')
+    .isEmail()
+    .withMessage('Please input a valid email address')
     .custom(value => db.query('select * from users where email = $1', [value]).then((user) => {
       if (user.rowCount >= 1) throw new Error('email has already been registered');
     })),
@@ -65,7 +67,6 @@ const validateSignup = [
     next();
   },
 ];
-
 const validateLogin = [
   check('email').isEmail().withMessage('please input a valid email address')
     .trim(),

@@ -4,7 +4,7 @@
   "description": "Online voting platform",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 15000 --require @babel/register ./server/test/partyTest.js --exit",
     "start": "nodemon --require @babel/register server.js",
     "mig": "babel-node ./server/models/migrate.js"
   },
@@ -19,24 +19,32 @@
   },
   "homepage": "https://github.com/czarjulius/E-Vote#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
     "bcrypt": "^3.0.4",
     "body-parser": "^1.18.3",
     "chai": "^4.2.0",
+    "cloudinary": "^1.13.2",
+    "coveralls": "^3.0.2",
+    "datauri": "^1.1.0",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
     "jsonwebtoken": "^8.5.0",
+    "multer": "^1.4.1",
     "mocha": "^6.0.2",
-    "nodemon": "^1.18.10",
     "pg": "^7.8.1",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@babel/node": "^7.2.2",
     "eslint": "^5.15.1",
     "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.16.0"
+    "eslint-plugin-import": "^2.16.0",
+    "nodemon": "^1.18.10",
+    "nyc": "^13.3.0"
   }
 }

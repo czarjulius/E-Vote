@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
@@ -12,7 +13,7 @@ const auth = (req, res, next) => {
     });
   }
   try {
-    const decoded = jwt.verify(token, process.env.PRIVATE_KEY);
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.userData = decoded;
     next();
   } catch (error) {
