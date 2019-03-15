@@ -7,40 +7,40 @@ import server from '../../server';
 const api = supertest(server);
 let token;
 describe('tests for party controller', () => {
-  // describe('/POST create party', () => {
-  //   it('should create a new party', (done) => {
-  //     const party = {
-  //       name: 'apc',
-  //       hqAddress: 'Anambra',
-  //       logoUrl: 'www.party.pnp',
-  //     };
-  //     api.post('/api/v1/parties')
-  //       .set('x-auth-token', token)
-  //       .send(party)
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(201);
-  //         expect(res.body).to.have.property('status');
-  //         expect(res.body.status).to.equal(201);
-  //         expect(res.body).to.have.property('data');
-  //         done();
-  //       });
-  //   });
-  //   it('should fail to create a new party', (done) => {
-  //     const party = {
-  //       hqAddress: 'Anambra',
-  //       logoUrl: 'www.party.pnp',
-  //     };
-  //     api.post('/api/v1/parties')
-  //       .set('x-auth-token', token)
-  //       .send(party)
-  //       .end((err, res) => {
-  //         expect(res.status).to.equal(400);
-  //         expect(res.body.error[0]).to.equal('name must contain only alphabets');
-  //         expect(res.body.error[1]).to.equal('name must have atleast 2 characters');
-  //         done();
-  //       });
-  //   });
-  // });
+  describe('/POST create party', () => {
+    it('should create a new party', (done) => {
+      const party = {
+        name: 'apc',
+        hqAddress: 'Anambra',
+        logoUrl: 'www.party.pnp',
+      };
+      api.post('/api/v1/parties')
+        .set('x-auth-token', token)
+        .send(party)
+        .end((err, res) => {
+          expect(res.status).to.equal(201);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.equal(201);
+          expect(res.body).to.have.property('data');
+          done();
+        });
+    });
+    it('should fail to create a new party', (done) => {
+      const party = {
+        hqAddress: 'Anambra',
+        logoUrl: 'www.party.pnp',
+      };
+      api.post('/api/v1/parties')
+        .set('x-auth-token', token)
+        .send(party)
+        .end((err, res) => {
+          expect(res.status).to.equal(400);
+          expect(res.body.error[0]).to.equal('name must contain only alphabets');
+          expect(res.body.error[1]).to.equal('name must have atleast 2 characters');
+          done();
+        });
+    });
+  });
 
   describe(' Get /parties', () => {
     it('should get all parties', (done) => {

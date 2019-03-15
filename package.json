@@ -4,7 +4,7 @@
   "description": "Online voting platform",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 15000 --require @babel/register ./server/test/partyTest.js --exit",
+    "test": "mocha --timeout 15000 --require @babel/register ./server/test/**.js --exit",
     "start": "nodemon --require @babel/register server.js",
     "mig": "babel-node ./server/models/migrate.js"
   },

@@ -5,6 +5,8 @@ import db from '../models/db';
 
 const validateParty = [
   check('name')
+    .matches(/^[A-Za-z.\s_-]+$/)
+    .withMessage('name already exists')
     .matches(/^[a-zA-Z ]+$/)
     .withMessage('name must contain only alphabets')
     .isLength({ min: 2 })
@@ -36,6 +38,8 @@ const validateParty = [
 
 const validatePartyName = [
   check('name')
+    .matches(/^[A-Za-z.\s_-]+$/)
+    .withMessage('name already exists')
     .matches(/^[a-zA-Z ]+$/)
     .withMessage('name must contain only alphabets')
     .custom(value => db.query('select * from parties where name = $1', [value]).then((party) => {
