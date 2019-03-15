@@ -4,6 +4,7 @@ import admin from '../middleware/authorization';
 import auth from '../middleware/authentication';
 import { validateParty, validatePartyName } from '../middleware/validateParty';
 import validateId from '../middleware/validateId';
+
 const router = express.Router();
 
 router.post('/parties', auth, admin, validateParty, Party.createParty);
