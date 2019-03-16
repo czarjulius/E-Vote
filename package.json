@@ -4,9 +4,11 @@
   "description": "Online voting platform",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 15000 --require @babel/register ./server/test/**.js --exit",
+    "test": "mocha --require @babel/register ./server/test/userTest.js --exit --timeout 6000",
     "start": "nodemon --require @babel/register server.js",
-    "mig": "babel-node ./server/models/migrate.js"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "mig": "babel-node ./server/models/migrate.js",
+    "test-migrate": "NODE_ENV='test' babel-node server/models/migrate"
   },
   "repository": {
     "type": "git",

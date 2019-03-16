@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+- "10.8"
+- "8.12"
+dist: trusty
+env:
+global:
+- export NODE_ENV=test
+dist: trusty
+services:
+- postgresql
+branches:
+except:
+- gh-pages
+- master
+before_script:
+- psql -c"create user julius with password 'julius@1';" -U postgres
+- psql -c "create database e-vote_testdb;" -U postgres
+- npm install
+script:
+- npm test
+after_success: npm run coverage
