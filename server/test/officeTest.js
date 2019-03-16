@@ -27,8 +27,7 @@ async function clearTable() {
   return db.query(query);
 }
 
-
-describe('tests for party controller', () => {
+describe('tests for office controller', () => {
   before(async () => {
     await clearTable();
     await createAdmin();
@@ -52,17 +51,15 @@ describe('tests for party controller', () => {
         done();
       });
   });
-
-  describe('/POST create party', () => {
-    it('should create a new party', (done) => {
-      const party = {
-        name: 'apc',
-        hqAddress: 'Anambra',
-        logoUrl: 'www.party.pnp',
+  describe('/POST create office', () => {
+    it('should create a new office', (done) => {
+      const office = {
+        name: 'Governor',
+        type: 'state',
       };
-      api.post('/api/v1/parties')
+      api.post('/api/v1/offices')
         .set('x-auth-token', token)
-        .send(party)
+        .send(office)
         .end((err, res) => {
           expect(res.status).to.equal(201);
           expect(res.body).to.have.property('status');
@@ -71,26 +68,24 @@ describe('tests for party controller', () => {
           done();
         });
     });
-    it('should fail to create a new party', (done) => {
-      const party = {
-        hqAddress: 'Anambra',
-        logoUrl: 'www.party.pnp',
+    it('should fail to create a new office', (done) => {
+      const office = {
+        type: 'state',
       };
-      api.post('/api/v1/parties')
+      api.post('/api/v1/offices')
         .set('x-auth-token', token)
-        .send(party)
+        .send(office)
         .end((err, res) => {
           expect(res.status).to.equal(400);
           expect(res.body.error[0]).to.equal('name must contain only alphabets');
-          expect(res.body.error[1]).to.equal('name must have atleast 2 characters');
           done();
         });
     });
   });
 
-  describe(' Get /parties', () => {
-    it('should get all parties', (done) => {
-      api.get('/api/v1/parties')
+  describe(' Get /offices', () => {
+    it('should get all offices', (done) => {
+      api.get('/api/v1/offices')
         .set('x-auth-token', token)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -101,9 +96,9 @@ describe('tests for party controller', () => {
         });
     });
   });
-  describe(' Get /parties/:id', () => {
-    it('should get one party', (done) => {
-      api.get('/api/v1/parties/1')
+  describe(' Get /offices/:id', () => {
+    it('should get one office', (done) => {
+      api.get('/api/v1/offices/1')
         .set('x-auth-token', token)
         .end((err, res) => {
           expect(res.status).to.equal(200);
@@ -117,7 +112,7 @@ describe('tests for party controller', () => {
     });
 
     it('should return 400 if the id is not a number', (done) => {
-      api.get('/api/v1/parties/2k')
+      api.get('/api/v1/offices/2k')
         .set('x-auth-token', token)
         .expect(400)
         .end((err, res) => {

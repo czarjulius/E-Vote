@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable prefer-destructuring */
 import { expect } from 'chai';
 import { describe } from 'mocha';

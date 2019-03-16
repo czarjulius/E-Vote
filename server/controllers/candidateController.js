@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable consistent-return */
 import {
   users, offices, parties, candidates, newCndidate, checkCandidate,
@@ -18,6 +19,7 @@ class Candidate {
           error: 'user not found',
         });
       }
+
       const checkOffice = await db.query(offices, [officeId]);
       if (checkOffice.rowCount < 1) {
         return res.status(404).json({
@@ -32,7 +34,7 @@ class Candidate {
           error: 'party not found',
         });
       }
-      const candidateExists = await db.query(candidates, [userId, partyId]);
+      const candidateExists = await db.query(candidates, [userId]);
       if (candidateExists.rowCount >= 1) {
         return res.status(409).json({
           status: 409,
@@ -40,8 +42,6 @@ class Candidate {
         });
       }
       const result = await db.query(newCndidate, [officeId, partyId, userId]);
-      console.log(result);
-      console.log(result.rows);
       return res.status(201).json({
         status: 201,
         data: {
@@ -85,12 +85,12 @@ class Candidate {
         });
       }
 
-      const { result } = await db.query(insertVote, [voter, office, candidate]);
+      const result = await db.query(insertVote, [voter, office, candidate]);
       res.status(201).json({
         status: 201,
         data: {
-          office: result[0].officeid,
-          candidate: result[0].candidateid,
+          office: result.rows[0].officeid,
+          candidate: result.rows[0].candidateid,
           voter: result.rows[0].createdby,
         },
       });
@@ -111,15 +111,15 @@ class Candidate {
           error: 'id is not a number',
         });
       }
-      const { officeRows } = await db.query(checkOffice, [officeId]);
-      if (!officeRows[0]) {
+      const officeRows = await db.query(offices, [officeId]);
+      if (officeRows.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'office not found',
         });
       }
-      const { electionResult } = await db.query(voteResult, [officeId]);
-      if (!electionResult[0]) {
+      const electionResult = await db.query(voteResult, [officeId]);
+      if (electionResult.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'no result for this office yet',

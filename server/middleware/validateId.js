@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable consistent-return */
 const validateId = (req, res, next) => {
   const { id } = req.params;

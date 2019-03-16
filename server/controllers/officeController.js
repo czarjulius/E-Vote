@@ -54,7 +54,7 @@ class Office {
 
       return res.status(200).json({
         status: 200,
-        office: rows[0],
+        data: rows[0],
       });
     } catch (err) {
       return res.status(500).json({
