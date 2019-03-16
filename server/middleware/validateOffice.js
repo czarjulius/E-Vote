@@ -6,7 +6,7 @@ const validateOffice = [
   check('name')
     .matches(/^[a-zA-Z ]+$/)
     .withMessage('name must contain only alphabets')
-    .custom(value => db.query('select * from offices where name = $1', [value]).then((office) => {
+    .custom(value => db.query('select * from offices where LOWER(name) = LOWER($1)', [value]).then((office) => {
       if (office.rowCount >= 1) throw new Error('name already exists');
     }))
     .trim(),

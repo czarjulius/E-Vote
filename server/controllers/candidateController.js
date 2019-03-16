@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import {
-  checkUser, checkOffice, checkParty, candidateExists, insertCandidate, checkCandidate,
+  users, offices, parties, candidates, newCndidate, checkCandidate,
   checkVote, insertVote, voteResult,
 } from '../models/candidateQuery';
 import db from '../models/db';
@@ -11,46 +11,43 @@ class Candidate {
       const { userId } = req.params;
       const { officeId, partyId } = req.body;
 
-      const { rows } = await db.query(checkUser, [userId]);
-      if (!rows[0]) {
+      const checkUser = await db.query(users, [userId]);
+      if (checkUser.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'user not found',
         });
       }
-
-      const { officeRows } = await db.query(checkOffice, [officeId]);
-      if (!officeRows[0]) {
+      const checkOffice = await db.query(offices, [officeId]);
+      if (checkOffice.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'office not found',
         });
       }
-
-      const { partyRows } = await db.query(checkParty, [partyId]);
-      if (!partyRows[0]) {
+      const checkParty = await db.query(parties, [partyId]);
+      if (checkParty.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'party not found',
         });
       }
-
-      const { candidateRows } = await db.query(candidateExists, [userId, partyId]);
-      if (candidateRows.rowCount >= 1) {
-        return res.status(406).json({
-          status: 406,
+      const candidateExists = await db.query(candidates, [userId, partyId]);
+      if (candidateExists.rowCount >= 1) {
+        return res.status(409).json({
+          status: 409,
           error: 'canditate has already been registered',
         });
       }
-      const { result } = await db.query(insertCandidate, [officeId, partyId, userId]);
+      const result = await db.query(newCndidate, [officeId, partyId, userId]);
       console.log(result);
       console.log(result.rows);
-      res.status(201).json({
+      return res.status(201).json({
         status: 201,
         data: {
-          id: result[0].id,
-          office: result[0].officeid,
-          user: result[0].userid,
+          id: result.rows[0].id,
+          office: result.rows[0].officeid,
+          user: result.rows[0].userid,
         },
       });
     } catch (err) {
@@ -66,21 +63,21 @@ class Candidate {
       const { office, candidate } = req.body;
       const voter = req.userData.id;
 
-      const { officeRows } = await db.query(checkOffice, [office]);
-      if (!officeRows[0]) {
+      const officeRows = await db.query(offices, [office]);
+      if (officeRows.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'office not found',
         });
       }
-      const { candidateRows } = await db.query(checkCandidate, [candidate]);
-      if (!candidateRows[0]) {
+      const candidateRows = await db.query(checkCandidate, [candidate]);
+      if (candidateRows.rowCount < 1) {
         return res.status(404).json({
           status: 404,
           error: 'candidate not found',
         });
       }
-      const { voteRows } = await db.query(checkVote, [office, voter]);
+      const voteRows = await db.query(checkVote, [office, voter]);
       if (voteRows.rowCount >= 1) {
         return res.status(406).json({
           status: 406,
