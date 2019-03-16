@@ -3,10 +3,20 @@ import { expect } from 'chai';
 import { describe } from 'mocha';
 import supertest from 'supertest';
 import server from '../../server';
+import db from '../models/db';
 
 const api = supertest(server);
-let token;
-describe('tests for user controller', () => {
+
+async function clearTable() {
+  const query = 'DELETE FROM users';
+  return db.query(query);
+}
+
+describe('tests for user controller', async () => {
+  before(async () => {
+    await clearTable();
+  });
+
   describe('/POST create user', () => {
     it('should create a new user', (done) => {
       const user = {
@@ -17,11 +27,11 @@ describe('tests for user controller', () => {
         password: '123def',
         phoneNumber: '09088776654',
         passportUrl: 'www.user.png',
+        isAdmin: true,
       };
       api.post('/api/v1/auth/signup')
         .send(user)
         .end((err, res) => {
-          token = res.body.data.token;
           expect(res.status).to.equal(201);
           expect(res.body).to.have.property('status');
           expect(res.body.status).to.equal(201);
@@ -32,6 +42,7 @@ describe('tests for user controller', () => {
           done();
         });
     });
+
     it('should not create a new user', (done) => {
       const user = {
         lastName: 'Ngwu',
@@ -61,7 +72,6 @@ describe('tests for user controller', () => {
       api.post('/api/v1/auth/login')
         .send(user)
         .end((err, res) => {
-          token = res.body.data.token;
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property('status');
           expect(res.body.status).to.equal(200);
@@ -72,6 +82,7 @@ describe('tests for user controller', () => {
           done();
         });
     });
+
     it('should not login user', (done) => {
       const user = {
         email: 'julius@gmail.com',
